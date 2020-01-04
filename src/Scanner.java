@@ -97,7 +97,16 @@ class Scanner {
                 if (match('/')) {
                     // A comment goes until the end of the line.
                     while (peek() != '\n' && !isAtEnd()) advance();
-                } else {
+                } else if (match('*')) {
+                    while (peek() != '*' && peekNext() != '/' && !isAtEnd()) {
+                        if (peek() == '\n') line++;
+                        advance();
+                    }
+                    //Consume * and /
+                    advance();
+                    advance();
+                }
+                else {
                     addToken(TokenType.SLASH);
                 }
                 break;
