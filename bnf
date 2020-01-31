@@ -1,0 +1,22 @@
+expr
+	| expr group
+	| IDENT
+	| NUM
+
+group
+	| EMPTY
+	| "(" inner ")" group
+	| "." IDENT group
+
+inner
+	| expr last
+	| EMPTY
+
+last
+ 	| "," expr last
+	| EMPTY
+
+
+expr → expr ( "(" ( expr ( "," expr )* )? ")" | "." IDENTIFIER )*
+     | IDENTIFIER
+     | NUMBER
