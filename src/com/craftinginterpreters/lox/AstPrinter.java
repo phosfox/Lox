@@ -1,6 +1,5 @@
 package com.craftinginterpreters.lox;
 
-import com.sun.prism.impl.TextureResourcePool;
 
 public class AstPrinter implements Expr.Visitor<String> {
     String print(Expr expr) {
