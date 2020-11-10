@@ -10,10 +10,8 @@ import static com.craftinginterpreters.lox.TokenType.*;
 //        comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
 //        addition       → multiplication ( ( "-" | "+" ) multiplication )* ;
 //        multiplication → unary ( ( "/" | "*" ) unary )* ;
-//        unary          → ( "!" | "-" ) unary
-//        | primary ;
-//        primary        → NUMBER | STRING | "false" | "true" | "nil"
-//        | "(" expression ")" ;
+//        unary          → ( "!" | "-" ) unary | primary ;
+//        primary        → NUMBER | STRING | "false" | "true" | "nil" | "(" expression ")" ;
 
 
 public class Parser {
@@ -51,35 +49,35 @@ public class Parser {
     }
 
     private Expr comparison() {
-        Expr expr = addition();
+        Expr expr = term();
 
         while (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
             Token operator = previous();
-            Expr right = addition();
+            Expr right = term();
             expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
 
-    private Expr addition() {
-        Expr expr = multiplication();
+    private Expr term() {
+        Expr expr = factor();
 
         while (match(MINUS, PLUS)) {
-            Token operator = previous();
-            Expr right = multiplication();
-            expr = new Expr.Binary(expr, operator, right);
+           Token operator = previous();
+           Expr right = factor();
+           expr = new Expr.Binary(expr, operator, right);
         }
 
         return expr;
     }
 
-    private Expr multiplication() {
+    private Expr factor() {
         Expr expr = unary();
 
         while (match(SLASH, STAR)) {
-            Token operator = previous();
-            Expr right = unary();
-            expr = new Expr.Binary(expr, operator, right);
+           Token operator = previous();
+           Expr right = unary();
+           expr = new Expr.Binary(expr, operator, right);
         }
 
         return expr;
