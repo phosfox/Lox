@@ -34,7 +34,24 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return ternary();
+    }
+
+    // cond ? ifTrue : ifFalse
+    private Expr ternary() {
+        Expr expr = equality();
+
+        if (match(QUESTIONMARK)) {
+            Token questionMark = previous();
+            Expr condIfTrue = comparison();
+            if (match(COLON)) {
+                Token colon = previous();
+                Expr condIfFalse = equality();
+                expr = new Expr.Ternary(expr, questionMark, condIfTrue, colon, condIfFalse);
+            }
+
+        }
+        return expr;
     }
 
     private Expr equality() {
