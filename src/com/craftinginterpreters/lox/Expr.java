@@ -12,27 +12,9 @@ abstract class Expr {
 
         R visitUnaryExpr(Unary expr);
 
-        R visitTernaryExpr(Ternary ternary);
-    }
+        R visitTernaryExpr(Ternary expr);
 
-    static class Ternary extends Expr {
-        final Expr condition;
-        final Token questionMark;
-        final Expr condIfTrue;
-        final Token colon;
-        final Expr condIfFalse;
-
-        Ternary(Expr condition, Token questionMark, Expr condIfTrue, Token colon, Expr condIfFalse) {
-            this.condition = condition;
-            this.questionMark = questionMark;
-            this.condIfTrue = condIfTrue;
-            this.colon = colon;
-            this.condIfFalse = condIfFalse;
-        }
-
-        <R> R accept(Visitor<R> visitor) {
-            return visitor.visitTernaryExpr(this);
-        }
+        R visitVariableExpr(Variable expr);
     }
 
     static class Binary extends Expr {
@@ -87,6 +69,38 @@ abstract class Expr {
 
         final Token operator;
         final Expr right;
+    }
+
+    static class Ternary extends Expr {
+        Ternary(Expr condition, Token questionMark, Expr condIfTrue, Token colon, Expr condIfFalse) {
+            this.condition = condition;
+            this.questionMark = questionMark;
+            this.condIfTrue = condIfTrue;
+            this.colon = colon;
+            this.condIfFalse = condIfFalse;
+        }
+
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitTernaryExpr(this);
+        }
+
+        final Expr condition;
+        final Token questionMark;
+        final Expr condIfTrue;
+        final Token colon;
+        final Expr condIfFalse;
+    }
+
+    static class Variable extends Expr {
+        Variable(Token name) {
+            this.name = name;
+        }
+
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVariableExpr(this);
+        }
+
+        final Token name;
     }
 
     abstract <R> R accept(Visitor<R> visitor);
